@@ -1,0 +1,52 @@
+<section class="page-header">
+  <div>
+    <p class="eyebrow">TheMealDB API</p>
+    <h1>Explora recetas del mundo</h1>
+    <p>
+      Busca recetas, descubre categorías y aprende a preparar platos de diferentes países.
+    </p>
+  </div>
+</section>
+
+<app-meals-filter
+  [searchTerm]="searchTerm()"
+  [selectedCategory]="selectedCategory()"
+  [categories]="categories()"
+  (searchTermChange)="searchTerm.set($event)"
+  (selectedCategoryChange)="onCategoryChange($event)"
+  (search)="searchMeals()"
+  (clearFilters)="clearFilters()"
+></app-meals-filter>
+
+@if (loading()) {
+  <app-loading message="Cargando recetas..."></app-loading>
+} @else if (error()) {
+  <app-error-message [message]="error()"></app-error-message>
+} @else {
+  <p class="results-count">
+    Mostrando {{ meals().length }} recetas
+  </p>
+
+  @if (meals().length === 0) {
+    <div class="empty-state">
+      <mat-icon>restaurant</mat-icon>
+      <h2>No se encontraron recetas</h2>
+      <p>
+        Prueba buscando otra palabra o seleccionando una categoría diferente.
+      </p>
+
+      <button mat-stroked-button type="button" (click)="clearFilters()">
+        Limpiar filtros
+      </button>
+    </div>
+  } @else {
+    <div class="meals-grid">
+      @for (meal of meals(); track meal.idMeal) {
+        <app-meal-card
+          [meal]="meal"
+          [categoryFallback]="selectedCategory() !== 'all' ? selectedCategory() : ''"
+        ></app-meal-card>
+      }
+    </div>
+  }
+}

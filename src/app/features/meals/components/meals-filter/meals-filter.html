@@ -1,0 +1,51 @@
+<section class="filters">
+  <mat-form-field appearance="outline">
+    <mat-label>Buscar receta</mat-label>
+    <input
+      matInput
+      [ngModel]="searchTerm"
+      (ngModelChange)="searchTermChange.emit($event)"
+      placeholder="Chicken, pasta, beef, cake..."
+      (keyup.enter)="search.emit()"
+    />
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Categoría</mat-label>
+    <mat-select
+      [ngModel]="selectedCategory"
+      (ngModelChange)="selectedCategoryChange.emit($event)"
+    >
+      <mat-option value="all">Todas las categorías</mat-option>
+
+      @for (category of categories; track category.idCategory) {
+        <mat-option [value]="category.strCategory">
+          {{ category.strCategory }}
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <div class="filters-actions">
+    <button
+      mat-flat-button
+      type="button"
+      class="search-button"
+      (click)="search.emit()"
+    >
+      <mat-icon>search</mat-icon>
+      Buscar
+    </button>
+
+    <button
+      mat-stroked-button
+      type="button"
+      class="clear-button"
+      (click)="clearFilters.emit()"
+    >
+      <mat-icon>restart_alt</mat-icon>
+      Limpiar
+    </button>
+  </div>
+</section>

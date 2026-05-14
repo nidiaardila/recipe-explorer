@@ -1,0 +1,34 @@
+<mat-card
+  class="meal-card"
+  role="link"
+  tabindex="0"
+  (click)="openDetail()"
+  (keydown.enter)="openDetail()"
+>
+  <div class="image-wrapper">
+    <img
+      [src]="meal.strMealThumb"
+      [alt]="'Imagen de ' + meal.strMeal"
+    />
+
+    <span class="category-badge">
+      {{ category }}
+    </span>
+  </div>
+
+  <mat-card-content>
+    <h2>{{ meal.strMeal }}</h2>
+
+    <p class="meal-area">
+      <mat-icon>public</mat-icon>
+      {{ area }}
+    </p>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <span class="details-link">
+      Ver receta
+      <mat-icon>arrow_forward</mat-icon>
+    </span>
+  </mat-card-actions>
+</mat-card>
