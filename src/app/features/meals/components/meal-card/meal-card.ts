@@ -17,6 +17,7 @@ export class MealCard {
 
   @Input({ required: true }) meal!: Meal;
   @Input() categoryFallback = '';
+  @Input() areaFallback = '';
   @Input() favorite = false;
 
   @Output() toggleFavorite = new EventEmitter<string>();
@@ -26,7 +27,7 @@ export class MealCard {
   }
 
   get area(): string {
-    return this.meal.strArea || 'Origen no disponible';
+    return this.meal.strArea || this.areaFallback || 'Origen no disponible';
   }
 
   openDetail(): void {

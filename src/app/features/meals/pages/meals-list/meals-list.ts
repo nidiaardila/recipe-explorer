@@ -1,9 +1,13 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
-import { Meal, MealCategory } from '../../../../core/models/meal.model';
+import {
+  Meal,
+  MealArea,
+  MealCategory
+} from '../../../../core/models/meal.model';
 import { FavoritesService } from '../../../../core/services/favorites';
 import { MealsService } from '../../../../core/services/meals';
 import { MealCard } from '../../components/meal-card/meal-card';
@@ -27,18 +31,21 @@ import { Loading } from '../../../../shared/components/loading/loading';
 })
 export class MealsList implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly mealsService: MealsService = inject(MealsService);
   private readonly favoritesService = inject(FavoritesService);
 
   readonly meals = signal<Meal[]>([]);
   readonly favoriteMeals = signal<Meal[]>([]);
   readonly categories = signal<MealCategory[]>([]);
+  readonly areas = signal<MealArea[]>([]);
 
   readonly loading = signal(false);
   readonly error = signal('');
 
   readonly searchTerm = signal('');
   readonly selectedCategory = signal('all');
+  readonly selectedArea = signal('all');
   readonly showOnlyFavorites = signal(false);
 
   readonly pageTitle = computed(() =>
@@ -59,6 +66,7 @@ export class MealsList implements OnInit {
 
   ngOnInit(): void {
     this.loadCategories();
+    this.loadAreas();
 
     this.route.data.subscribe((data) => {
       this.showOnlyFavorites.set(Boolean(data['onlyFavorites']));
@@ -83,6 +91,17 @@ export class MealsList implements OnInit {
     });
   }
 
+  loadAreas(): void {
+    this.mealsService.getAreas().subscribe({
+      next: (areas: MealArea[]) => {
+        this.areas.set(areas);
+      },
+      error: () => {
+        console.error('No se pudieron cargar los orígenes.');
+      }
+    });
+  }
+
   loadInitialMeals(): void {
     this.loadMealsBySearch('');
   }
@@ -94,12 +113,14 @@ export class MealsList implements OnInit {
     }
 
     this.selectedCategory.set('all');
+    this.selectedArea.set('all');
     this.loadMealsBySearch(this.searchTerm().trim());
   }
 
   onCategoryChange(category: string): void {
     this.selectedCategory.set(category);
     this.searchTerm.set('');
+    this.selectedArea.set('all');
 
     if (this.showOnlyFavorites()) {
       this.applyFavoriteFilters();
@@ -126,9 +147,40 @@ export class MealsList implements OnInit {
     });
   }
 
+  onAreaChange(area: string): void {
+    this.selectedArea.set(area);
+    this.searchTerm.set('');
+    this.selectedCategory.set('all');
+
+    if (this.showOnlyFavorites()) {
+      this.applyFavoriteFilters();
+      return;
+    }
+
+    if (area === 'all') {
+      this.loadInitialMeals();
+      return;
+    }
+
+    this.loading.set(true);
+    this.error.set('');
+
+    this.mealsService.filterByArea(area).subscribe({
+      next: (meals: Meal[]) => {
+        this.meals.set(meals);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set('No pudimos cargar las recetas de este origen.');
+        this.loading.set(false);
+      }
+    });
+  }
+
   clearFilters(loadMeals = true): void {
     this.searchTerm.set('');
     this.selectedCategory.set('all');
+    this.selectedArea.set('all');
 
     if (!loadMeals) {
       return;
@@ -139,6 +191,28 @@ export class MealsList implements OnInit {
     } else {
       this.loadInitialMeals();
     }
+  }
+
+  openRandomMeal(): void {
+    this.loading.set(true);
+    this.error.set('');
+
+    this.mealsService.getRandomMeal().subscribe({
+      next: (meal: Meal | undefined) => {
+        this.loading.set(false);
+
+        if (!meal) {
+          this.error.set('No pudimos encontrar una receta sorpresa.');
+          return;
+        }
+
+        this.router.navigate(['/meal', meal.idMeal]);
+      },
+      error: () => {
+        this.error.set('No pudimos cargar una receta sorpresa.');
+        this.loading.set(false);
+      }
+    });
   }
 
   loadFavoriteMeals(): void {
@@ -163,6 +237,7 @@ export class MealsList implements OnInit {
   applyFavoriteFilters(): void {
     const term = this.searchTerm().trim().toLowerCase();
     const category = this.selectedCategory();
+    const area = this.selectedArea();
 
     const filteredMeals = this.favoriteMeals().filter((meal) => {
       const matchesName =
@@ -171,7 +246,10 @@ export class MealsList implements OnInit {
       const matchesCategory =
         category === 'all' || meal.strCategory === category;
 
-      return matchesName && matchesCategory;
+      const matchesArea =
+        area === 'all' || meal.strArea === area;
+
+      return matchesName && matchesCategory && matchesArea;
     });
 
     this.meals.set(filteredMeals);

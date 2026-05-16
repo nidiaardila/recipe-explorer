@@ -27,6 +27,22 @@
     </mat-select>
   </mat-form-field>
 
+  <mat-form-field appearance="outline">
+    <mat-label>Origen</mat-label>
+    <mat-select
+      [ngModel]="selectedArea"
+      (ngModelChange)="selectedAreaChange.emit($event)"
+    >
+      <mat-option value="all">Todos los orígenes</mat-option>
+
+      @for (area of areas; track area.strArea) {
+        <mat-option [value]="area.strArea">
+          {{ area.strArea }}
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
   <div class="filters-actions">
     <button
       mat-flat-button

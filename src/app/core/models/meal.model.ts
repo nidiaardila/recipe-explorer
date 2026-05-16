@@ -6,11 +6,19 @@ export interface CategoriesResponse {
   categories: MealCategory[];
 }
 
+export interface AreasResponse {
+  meals: MealArea[] | null;
+}
+
 export interface MealCategory {
   idCategory: string;
   strCategory: string;
   strCategoryThumb: string;
   strCategoryDescription: string;
+}
+
+export interface MealArea {
+  strArea: string;
 }
 
 export interface MealIngredient {

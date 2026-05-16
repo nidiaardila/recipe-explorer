@@ -1,6 +1,6 @@
 .filters {
   display: grid;
-  grid-template-columns: 2fr 1fr auto;
+  grid-template-columns: 2fr 1fr 1fr auto;
   gap: 16px;
   margin-bottom: 24px;
   align-items: start;
@@ -35,7 +35,7 @@
   border-color: #fed7aa !important;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
   .filters {
     grid-template-columns: 1fr 1fr;
   }

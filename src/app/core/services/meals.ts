@@ -2,8 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { forkJoin, map, Observable, of } from 'rxjs';
 import {
+  AreasResponse,
   CategoriesResponse,
   Meal,
+  MealArea,
   MealCategory,
   MealIngredient,
   MealResponse
@@ -53,11 +55,31 @@ export class MealsService {
       .pipe(map((response) => response.categories));
   }
 
+  getAreas(): Observable<MealArea[]> {
+    return this.http
+      .get<AreasResponse>(`${this.apiUrl}/list.php`, {
+        params: {
+          a: 'list'
+        }
+      })
+      .pipe(map((response) => response.meals ?? []));
+  }
+
   filterByCategory(category: string): Observable<Meal[]> {
     return this.http
       .get<MealResponse>(`${this.apiUrl}/filter.php`, {
         params: {
           c: category
+        }
+      })
+      .pipe(map((response) => response.meals ?? []));
+  }
+
+  filterByArea(area: string): Observable<Meal[]> {
+    return this.http
+      .get<MealResponse>(`${this.apiUrl}/filter.php`, {
+        params: {
+          a: area
         }
       })
       .pipe(map((response) => response.meals ?? []));

@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
-import { MealCategory } from '../../../../core/models/meal.model';
+import { MealArea, MealCategory } from '../../../../core/models/meal.model';
 
 @Component({
   selector: 'app-meals-filter',
@@ -24,10 +24,13 @@ import { MealCategory } from '../../../../core/models/meal.model';
 export class MealsFilter {
   @Input() searchTerm = '';
   @Input() selectedCategory = 'all';
+  @Input() selectedArea = 'all';
   @Input() categories: MealCategory[] = [];
+  @Input() areas: MealArea[] = [];
 
   @Output() searchTermChange = new EventEmitter<string>();
   @Output() selectedCategoryChange = new EventEmitter<string>();
+  @Output() selectedAreaChange = new EventEmitter<string>();
   @Output() search = new EventEmitter<void>();
   @Output() clearFilters = new EventEmitter<void>();
 }

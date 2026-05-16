@@ -1,22 +1,38 @@
 <section class="page-header">
-  <div>
+  <div class="hero-content">
     <p class="eyebrow">TheMealDB API</p>
     <h1>{{ pageTitle() }}</h1>
     <p>
       {{ pageDescription() }}
     </p>
   </div>
+
+  @if (!showOnlyFavorites()) {
+    <button
+      mat-raised-button
+      type="button"
+      class="random-button"
+      (click)="openRandomMeal()"
+    >
+      <span class="random-icon">
+        <mat-icon>casino</mat-icon>
+      </span>
+
+      <span class="random-content">
+        <span class="random-title">Receta sorpresa</span>
+        <span class="random-subtitle">Descubre algo nuevo ahora</span>
+      </span>
+    </button>
+  }
 </section>
 
-<app-meals-filter
-  [searchTerm]="searchTerm()"
-  [selectedCategory]="selectedCategory()"
-  [categories]="categories()"
-  (searchTermChange)="searchTerm.set($event)"
-  (selectedCategoryChange)="onCategoryChange($event)"
-  (search)="searchMeals()"
-  (clearFilters)="clearFilters()"
-></app-meals-filter>
+<app-meal-card
+  [meal]="meal"
+  [categoryFallback]="selectedCategory() !== 'all' ? selectedCategory() : ''"
+  [areaFallback]="selectedArea() !== 'all' ? selectedArea() : ''"
+  [favorite]="isFavorite(meal.idMeal)"
+  (toggleFavorite)="toggleFavorite($event)"
+></app-meal-card>
 
 @if (loading()) {
   <app-loading message="Cargando recetas..."></app-loading>
