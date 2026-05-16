@@ -26,13 +26,18 @@
   }
 </section>
 
-<app-meal-card
-  [meal]="meal"
-  [categoryFallback]="selectedCategory() !== 'all' ? selectedCategory() : ''"
-  [areaFallback]="selectedArea() !== 'all' ? selectedArea() : ''"
-  [favorite]="isFavorite(meal.idMeal)"
-  (toggleFavorite)="toggleFavorite($event)"
-></app-meal-card>
+<app-meals-filter
+  [searchTerm]="searchTerm()"
+  [selectedCategory]="selectedCategory()"
+  [selectedArea]="selectedArea()"
+  [categories]="categories()"
+  [areas]="areas()"
+  (searchTermChange)="searchTerm.set($event)"
+  (selectedCategoryChange)="onCategoryChange($event)"
+  (selectedAreaChange)="onAreaChange($event)"
+  (search)="searchMeals()"
+  (clearFilters)="clearFilters()"
+></app-meals-filter>
 
 @if (loading()) {
   <app-loading message="Cargando recetas..."></app-loading>
@@ -52,21 +57,25 @@
     <div class="empty-state">
       @if (showOnlyFavorites()) {
         <mat-icon>favorite_border</mat-icon>
-        <h2>Aún no tienes recetas favoritas</h2>
-        <p>
-          Haz clic en el corazón de cualquier receta para guardarla aquí.
-        </p>
+      } @else if (selectedArea() !== 'all') {
+        <mat-icon>public</mat-icon>
+      } @else if (selectedCategory() !== 'all') {
+        <mat-icon>restaurant_menu</mat-icon>
+      } @else {
+        <mat-icon>restaurant</mat-icon>
+      }
 
+      <h2>{{ emptyStateTitle() }}</h2>
+
+      <p>
+        {{ emptyStateMessage() }}
+      </p>
+
+      @if (showOnlyFavorites() && totalFavoriteMeals() === 0) {
         <a mat-raised-button color="primary" routerLink="/">
           Ver recetas
         </a>
       } @else {
-        <mat-icon>restaurant</mat-icon>
-        <h2>No se encontraron recetas</h2>
-        <p>
-          Prueba buscando otra palabra o seleccionando una categoría diferente.
-        </p>
-
         <button mat-stroked-button type="button" (click)="clearFilters()">
           Limpiar filtros
         </button>
@@ -78,6 +87,7 @@
         <app-meal-card
           [meal]="meal"
           [categoryFallback]="selectedCategory() !== 'all' ? selectedCategory() : ''"
+          [areaFallback]="selectedArea() !== 'all' ? selectedArea() : ''"
           [favorite]="isFavorite(meal.idMeal)"
           (toggleFavorite)="toggleFavorite($event)"
         ></app-meal-card>

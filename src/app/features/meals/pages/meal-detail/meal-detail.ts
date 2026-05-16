@@ -6,10 +6,10 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 
 import { Meal, MealIngredient } from '../../../../core/models/meal.model';
+import { FavoritesService } from '../../../../core/services/favorites';
 import { MealsService } from '../../../../core/services/meals';
 import { ErrorMessage } from '../../../../shared/components/error-message/error-message';
 import { Loading } from '../../../../shared/components/loading/loading';
-import { FavoritesService } from '../../../../core/services/favorites';
 
 @Component({
   selector: 'app-meal-detail',
@@ -91,10 +91,7 @@ export class MealDetail implements OnInit {
       return [];
     }
 
-    return instructions
-      .split(/\r?\n/)
-      .map((step) => step.trim())
-      .filter(Boolean);
+    return this.formatInstructionSteps(instructions);
   }
 
   get youtubeUrl(): string {
@@ -106,22 +103,45 @@ export class MealDetail implements OnInit {
   }
 
   isFavorite(): boolean {
-  const id = this.meal()?.idMeal;
+    const id = this.meal()?.idMeal;
 
-  if (!id) {
-    return false;
+    if (!id) {
+      return false;
+    }
+
+    return this.favoritesService.isFavorite(id);
   }
 
-  return this.favoritesService.isFavorite(id);
-}
+  toggleFavorite(): void {
+    const id = this.meal()?.idMeal;
 
-toggleFavorite(): void {
-  const id = this.meal()?.idMeal;
+    if (!id) {
+      return;
+    }
 
-  if (!id) {
-    return;
+    this.favoritesService.toggleFavorite(id);
   }
 
-  this.favoritesService.toggleFavorite(id);
-}
+  private formatInstructionSteps(instructions: string): string[] {
+    const normalizedInstructions = instructions
+      .replace(/\r/g, '\n')
+      .replace(/\n{2,}/g, '\n')
+      .trim();
+
+    const lineSteps = normalizedInstructions
+      .split('\n')
+      .map((step) => step.trim())
+      .filter(Boolean);
+
+    if (lineSteps.length > 1) {
+      return lineSteps;
+    }
+
+    const sentenceSteps =
+      normalizedInstructions.match(/[^.!?]+[.!?]+(?:\s|$)|[^.!?]+$/g) || [];
+
+    return sentenceSteps
+      .map((step) => step.trim())
+      .filter((step) => step.length > 3);
+  }
 }

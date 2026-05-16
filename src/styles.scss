@@ -5,3 +5,64 @@ html {
 body {
   margin: 0;
 }
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #fff8f1;
+  font-family: Roboto, Arial, sans-serif;
+  color: #111827;
+}
+
+/* Selects desplegables de Recipe Explorer */
+.cdk-overlay-container {
+  z-index: 9999 !important;
+}
+
+.meal-select-panel.mat-mdc-select-panel,
+div.mat-mdc-select-panel.meal-select-panel {
+  background: #fffaf5 !important;
+  background-color: #fffaf5 !important;
+  opacity: 1 !important;
+  border: 1px solid #fed7aa !important;
+  border-radius: 18px !important;
+  box-shadow: 0 18px 40px rgba(67, 20, 7, 0.28) !important;
+  padding: 8px !important;
+  max-height: 320px !important;
+}
+
+.meal-select-panel .mat-mdc-option {
+  min-height: 48px !important;
+  border-radius: 12px !important;
+  background-color: #fffaf5 !important;
+  color: #111827 !important;
+  font-weight: 700 !important;
+}
+
+.meal-select-panel .mat-mdc-option .mdc-list-item__primary-text {
+  color: #111827 !important;
+  font-weight: 700 !important;
+}
+
+.meal-select-panel .mat-mdc-option:hover {
+  background-color: #ffedd5 !important;
+}
+
+.meal-select-panel .mat-mdc-option.mdc-list-item--selected {
+  background-color: #fed7aa !important;
+}
+
+.meal-select-panel
+  .mat-mdc-option.mdc-list-item--selected
+  .mdc-list-item__primary-text {
+  color: #9a3412 !important;
+  font-weight: 900 !important;
+}

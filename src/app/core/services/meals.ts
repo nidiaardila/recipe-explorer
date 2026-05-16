@@ -55,15 +55,15 @@ export class MealsService {
       .pipe(map((response) => response.categories));
   }
 
-  getAreas(): Observable<MealArea[]> {
-    return this.http
-      .get<AreasResponse>(`${this.apiUrl}/list.php`, {
-        params: {
-          a: 'list'
-        }
-      })
-      .pipe(map((response) => response.meals ?? []));
-  }
+ getAreas(): Observable<MealArea[]> {
+  return this.http
+    .get<AreasResponse>(`${this.apiUrl}/list.php`, {
+      params: {
+        a: 'list'
+      }
+    })
+    .pipe(map((response) => response.meals ?? []));
+}
 
   filterByCategory(category: string): Observable<Meal[]> {
     return this.http
@@ -75,15 +75,15 @@ export class MealsService {
       .pipe(map((response) => response.meals ?? []));
   }
 
-  filterByArea(area: string): Observable<Meal[]> {
-    return this.http
-      .get<MealResponse>(`${this.apiUrl}/filter.php`, {
-        params: {
-          a: area
-        }
-      })
-      .pipe(map((response) => response.meals ?? []));
-  }
+filterByArea(area: string): Observable<Meal[]> {
+  return this.http
+    .get<MealResponse>(`${this.apiUrl}/filter.php`, {
+      params: {
+        a: area
+      }
+    })
+    .pipe(map((response) => response.meals ?? []));
+}
 
   getRandomMeal(): Observable<Meal | undefined> {
     return this.http
@@ -108,4 +108,6 @@ export class MealsService {
 
     return ingredients;
   }
+
+
 }

@@ -14,6 +14,7 @@
   <mat-form-field appearance="outline">
     <mat-label>Categoría</mat-label>
     <mat-select
+      panelClass="meal-select-panel"
       [ngModel]="selectedCategory"
       (ngModelChange)="selectedCategoryChange.emit($event)"
     >
@@ -28,8 +29,9 @@
   </mat-form-field>
 
   <mat-form-field appearance="outline">
-    <mat-label>Origen</mat-label>
+    <mat-label>Cocina / origen</mat-label>
     <mat-select
+      panelClass="meal-select-panel"
       [ngModel]="selectedArea"
       (ngModelChange)="selectedAreaChange.emit($event)"
     >

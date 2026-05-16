@@ -64,6 +64,52 @@ export class MealsList implements OnInit {
     () => this.favoritesService.favoriteMealIds().length
   );
 
+  readonly emptyStateTitle = computed(() => {
+  if (this.showOnlyFavorites()) {
+    return this.totalFavoriteMeals() === 0
+      ? 'Aún no tienes recetas favoritas'
+      : 'No encontramos favoritas con esos filtros';
+  }
+
+  if (this.selectedArea() !== 'all') {
+    return `No encontramos recetas para ${this.selectedArea()}`;
+  }
+
+  if (this.selectedCategory() !== 'all') {
+    return `No encontramos recetas en ${this.selectedCategory()}`;
+  }
+
+  const term = this.searchTerm().trim();
+
+  if (term) {
+    return `No encontramos recetas para "${term}"`;
+  }
+
+  return 'No se encontraron recetas';
+});
+
+readonly emptyStateMessage = computed(() => {
+  if (this.showOnlyFavorites()) {
+    return this.totalFavoriteMeals() === 0
+      ? 'Haz clic en el corazón de cualquier receta para guardarla aquí.'
+      : 'Prueba limpiando los filtros o usando otra búsqueda dentro de tus favoritas.';
+  }
+
+  if (this.selectedArea() !== 'all') {
+    return 'Este origen aparece en TheMealDB, pero actualmente no tiene recetas asociadas al filtro. Prueba con otra cocina o busca por nombre.';
+  }
+
+  if (this.selectedCategory() !== 'all') {
+    return 'La API no devolvió recetas para esta categoría en este momento. Prueba con otra categoría o limpia los filtros.';
+  }
+
+  if (this.searchTerm().trim()) {
+    return 'Prueba con otra palabra, por ejemplo chicken, pasta, beef o cake.';
+  }
+
+  return 'Prueba buscando otra palabra o seleccionando una categoría diferente.';
+});
+
   ngOnInit(): void {
     this.loadCategories();
     this.loadAreas();

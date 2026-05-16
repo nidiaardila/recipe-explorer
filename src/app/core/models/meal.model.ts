@@ -19,6 +19,7 @@ export interface MealCategory {
 
 export interface MealArea {
   strArea: string;
+  strCountry?: string;
 }
 
 export interface MealIngredient {

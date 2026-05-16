@@ -164,12 +164,38 @@ h1 {
 
 .steps-list {
   margin: 0;
-  padding-left: 22px;
-  color: #374151;
-  line-height: 1.75;
+  padding: 0;
+  list-style: none;
+  counter-reset: recipe-step;
+  display: grid;
+  gap: 14px;
 
   li {
-    margin-bottom: 12px;
+    counter-increment: recipe-step;
+    position: relative;
+    padding: 18px 18px 18px 64px;
+    border-radius: 18px;
+    background: #fffaf5;
+    border: 1px solid #fed7aa;
+    color: #374151;
+    line-height: 1.7;
+    box-shadow: 0 8px 18px rgba(154, 52, 18, 0.06);
+
+    &::before {
+      content: counter(recipe-step);
+      position: absolute;
+      left: 18px;
+      top: 18px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #ea580c;
+      color: #ffffff;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 14px;
+    }
   }
 }
 
@@ -220,7 +246,22 @@ h1 {
     font-size: 38px;
   }
 
+  .title-row {
+    flex-direction: column;
+  }
+
   .ingredients-grid {
     grid-template-columns: 1fr;
+  }
+
+  .steps-list {
+    li {
+      padding: 16px 16px 16px 56px;
+
+      &::before {
+        left: 16px;
+        top: 16px;
+      }
+    }
   }
 }

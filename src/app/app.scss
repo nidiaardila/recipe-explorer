@@ -2,10 +2,21 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: #fff8f1;
 }
 
 .app-main {
   flex: 1;
-  padding: 24px;
+  width: 100%;
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 28px;
+  box-sizing: border-box;
   background: #fff8f1;
+}
+
+@media (max-width: 700px) {
+  .app-main {
+    padding: 18px;
+  }
 }

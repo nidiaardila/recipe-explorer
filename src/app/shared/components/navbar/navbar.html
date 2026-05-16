@@ -1,1 +1,25 @@
-<p>navbar works!</p>
+<mat-toolbar class="navbar">
+  <div class="brand" routerLink="/">
+    <mat-icon>restaurant_menu</mat-icon>
+    <span>Recipe Explorer</span>
+  </div>
+
+  <nav>
+    <a
+      mat-button
+      routerLink="/"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      Recetas
+    </a>
+
+    <a
+      mat-button
+      routerLink="/favorites"
+      routerLinkActive="active-link"
+    >
+      Favoritos
+    </a>
+  </nav>
+</mat-toolbar>
