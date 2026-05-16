@@ -1,5 +1,6 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -7,7 +8,7 @@ import { Meal } from '../../../../core/models/meal.model';
 
 @Component({
   selector: 'app-meal-card',
-  imports: [MatCardModule, MatIconModule],
+  imports: [MatCardModule, MatIconModule, MatButtonModule],
   templateUrl: './meal-card.html',
   styleUrl: './meal-card.scss'
 })
@@ -16,6 +17,9 @@ export class MealCard {
 
   @Input({ required: true }) meal!: Meal;
   @Input() categoryFallback = '';
+  @Input() favorite = false;
+
+  @Output() toggleFavorite = new EventEmitter<string>();
 
   get category(): string {
     return this.meal.strCategory || this.categoryFallback || 'Receta';
@@ -27,5 +31,12 @@ export class MealCard {
 
   openDetail(): void {
     this.router.navigate(['/meal', this.meal.idMeal]);
+  }
+
+  onToggleFavorite(event: MouseEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.toggleFavorite.emit(this.meal.idMeal);
   }
 }

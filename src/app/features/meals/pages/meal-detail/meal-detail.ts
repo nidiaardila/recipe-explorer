@@ -9,6 +9,7 @@ import { Meal, MealIngredient } from '../../../../core/models/meal.model';
 import { MealsService } from '../../../../core/services/meals';
 import { ErrorMessage } from '../../../../shared/components/error-message/error-message';
 import { Loading } from '../../../../shared/components/loading/loading';
+import { FavoritesService } from '../../../../core/services/favorites';
 
 @Component({
   selector: 'app-meal-detail',
@@ -27,6 +28,7 @@ import { Loading } from '../../../../shared/components/loading/loading';
 export class MealDetail implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly mealsService: MealsService = inject(MealsService);
+  private readonly favoritesService = inject(FavoritesService);
 
   readonly meal = signal<Meal | undefined>(undefined);
   readonly ingredients = signal<MealIngredient[]>([]);
@@ -102,4 +104,24 @@ export class MealDetail implements OnInit {
   get sourceUrl(): string {
     return this.meal()?.strSource || '';
   }
+
+  isFavorite(): boolean {
+  const id = this.meal()?.idMeal;
+
+  if (!id) {
+    return false;
+  }
+
+  return this.favoritesService.isFavorite(id);
+}
+
+toggleFavorite(): void {
+  const id = this.meal()?.idMeal;
+
+  if (!id) {
+    return;
+  }
+
+  this.favoritesService.toggleFavorite(id);
+}
 }

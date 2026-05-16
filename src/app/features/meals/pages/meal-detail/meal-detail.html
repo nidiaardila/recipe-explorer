@@ -44,10 +44,22 @@
       </aside>
 
       <div class="meal-info">
-        <div class="title-block">
-          <p class="eyebrow">TheMealDB Recipe</p>
+      <div class="title-block">
+  <p class="eyebrow">TheMealDB Recipe</p>
 
-          <h1>{{ meal()?.strMeal }}</h1>
+  <div class="title-row">
+    <h1>{{ meal()?.strMeal }}</h1>
+
+    <button
+      mat-icon-button
+      type="button"
+      class="favorite-detail-button"
+      [attr.aria-label]="isFavorite() ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+      (click)="toggleFavorite()"
+    >
+      <mat-icon>{{ isFavorite() ? 'favorite' : 'favorite_border' }}</mat-icon>
+    </button>
+  </div>
 
           <p class="subtitle">
             Receta de categoría {{ meal()?.strCategory || 'no disponible' }}

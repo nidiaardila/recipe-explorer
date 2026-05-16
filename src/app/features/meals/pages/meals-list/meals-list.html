@@ -1,9 +1,9 @@
 <section class="page-header">
   <div>
     <p class="eyebrow">TheMealDB API</p>
-    <h1>Explora recetas del mundo</h1>
+    <h1>{{ pageTitle() }}</h1>
     <p>
-      Busca recetas, descubre categorías y aprende a preparar platos de diferentes países.
+      {{ pageDescription() }}
     </p>
   </div>
 </section>
@@ -24,20 +24,37 @@
   <app-error-message [message]="error()"></app-error-message>
 } @else {
   <p class="results-count">
-    Mostrando {{ meals().length }} recetas
+    @if (showOnlyFavorites()) {
+      Tienes {{ totalFavoriteMeals() }} recetas favoritas · Mostrando
+      {{ meals().length }}
+    } @else {
+      Mostrando {{ meals().length }} recetas
+    }
   </p>
 
   @if (meals().length === 0) {
     <div class="empty-state">
-      <mat-icon>restaurant</mat-icon>
-      <h2>No se encontraron recetas</h2>
-      <p>
-        Prueba buscando otra palabra o seleccionando una categoría diferente.
-      </p>
+      @if (showOnlyFavorites()) {
+        <mat-icon>favorite_border</mat-icon>
+        <h2>Aún no tienes recetas favoritas</h2>
+        <p>
+          Haz clic en el corazón de cualquier receta para guardarla aquí.
+        </p>
 
-      <button mat-stroked-button type="button" (click)="clearFilters()">
-        Limpiar filtros
-      </button>
+        <a mat-raised-button color="primary" routerLink="/">
+          Ver recetas
+        </a>
+      } @else {
+        <mat-icon>restaurant</mat-icon>
+        <h2>No se encontraron recetas</h2>
+        <p>
+          Prueba buscando otra palabra o seleccionando una categoría diferente.
+        </p>
+
+        <button mat-stroked-button type="button" (click)="clearFilters()">
+          Limpiar filtros
+        </button>
+      }
     </div>
   } @else {
     <div class="meals-grid">
@@ -45,6 +62,8 @@
         <app-meal-card
           [meal]="meal"
           [categoryFallback]="selectedCategory() !== 'all' ? selectedCategory() : ''"
+          [favorite]="isFavorite(meal.idMeal)"
+          (toggleFavorite)="toggleFavorite($event)"
         ></app-meal-card>
       }
     </div>

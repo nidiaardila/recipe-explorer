@@ -5,15 +5,21 @@ import { MealsList } from './features/meals/pages/meals-list/meals-list';
 export const routes: Routes = [
   {
     path: '',
-    component: MealsList
+    component: MealsList,
+    data: {
+      onlyFavorites: false
+    }
+  },
+  {
+    path: 'favorites',
+    component: MealsList,
+    data: {
+      onlyFavorites: true
+    }
   },
   {
     path: 'meal/:id',
     component: MealDetail
-  },
-  {
-    path: 'favorites',
-    redirectTo: ''
   },
   {
     path: '**',

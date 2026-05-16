@@ -71,6 +71,23 @@
   margin-bottom: 28px;
 }
 
+.title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.favorite-detail-button {
+  background: #fff1f2;
+  color: #dc2626;
+  flex-shrink: 0;
+
+  &:hover {
+    background: #ffe4e6;
+  }
+}
+
 .eyebrow {
   margin: 0 0 10px;
   color: #ea580c;

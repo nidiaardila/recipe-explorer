@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { forkJoin, map, Observable, of } from 'rxjs';
 import {
   CategoriesResponse,
   Meal,
@@ -35,6 +35,16 @@ export class MealsService {
         }
       })
       .pipe(map((response) => response.meals?.[0]));
+  }
+
+  getMealsByIds(ids: string[]): Observable<Meal[]> {
+    if (ids.length === 0) {
+      return of([]);
+    }
+
+    return forkJoin(ids.map((id) => this.getMealById(id))).pipe(
+      map((meals) => meals.filter((meal): meal is Meal => Boolean(meal)))
+    );
   }
 
   getCategories(): Observable<MealCategory[]> {
